@@ -116,8 +116,8 @@ var log = function(result){
     console.log("Result " + result)
 }
 
-var logError = function(errorMessage){
-    console.log("Error " + errorMessage);
+var logError = function(error){
+    console.log("Error " + error.message);
 }
 
 workerWrapper.addAll(1,2,3,4).then(log, logError);
@@ -131,13 +131,15 @@ workerWrapper.transferFunctionCode("badSyntax", "function(x)=fff").then(log, log
 ````
 will print `Error Unexpected token =`. In case there is no error the result handler's argument is just a transferred function's name. 
 
-If there is no need to use different handlers in every transferexecution the default handlers can be set.
+If there is no need to use different handlers in every transfer/execution the default handlers can be set.
 ````javascript
 workerWrapper.setDefaultErrorHandler(logError);
 workerWrapper.setDefaultResultHandler(log);
 ````
 
 If both default and specific handlers are set, the default ones will run earlier. 
+
+Error objects properties are different in every browser. Awww transfers the following properties of errors objects: description, fileName, lineNumber, message, name, number, stack. Many of them may be undefined, the most widely supported property is probably "message". 
 
 
 ### Contribution

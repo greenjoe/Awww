@@ -158,7 +158,17 @@ if (this.document) {
                 postMessage({id: id, type: "success", result: result});
             }
         } catch (error) {
-            postMessage({id: id, type: "error", error: error.message});
+            postMessage({id: id, type: "error", error: filterErrorObject(error)});
         }
+    }
+
+    var supportedErrorProperties = ["description", "fileName", "lineNumber", "message", "name", "number", "stack"];
+    function filterErrorObject(error){
+        //Original error object may contain functions and they cannot be sent.
+        var result = {};
+        supportedErrorProperties.forEach(function(property){
+            result[property] = error[property];
+        })
+        return result;
     }
 }
